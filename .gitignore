@@ -1,0 +1,14 @@
+# Editorconfig
+/.qoder
+
+# Dependencies
+node_modules/
+dist/
+*.local
+__pycache__/
+*.pyc
+.env
+.venv/
+
+# Data file
+*.db
