@@ -1,4 +1,5 @@
 # Editorconfig
+/.vscode
 /.qoder
 
 # Dependencies
@@ -7,8 +8,8 @@ dist/
 *.local
 __pycache__/
 *.pyc
-.env
 .venv/
 
 # Data file
 *.db
+.env

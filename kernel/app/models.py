@@ -12,7 +12,7 @@ class Bookmark(SQLModel, table=True):
 
     __tablename__ = "bookmarks"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True, autoincrement=True)
     url: str = Field(
         sa_column=sa.Column(sa.Text, nullable=False, unique=True, index=True),
     )
