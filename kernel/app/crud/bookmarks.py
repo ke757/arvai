@@ -1,4 +1,4 @@
-"""Bookmark CRUD operations using SQLModel and AsyncSession."""
+"""Bookmark CRUD operations."""
 
 from datetime import datetime, timezone
 from urllib.parse import urlparse
@@ -19,7 +19,7 @@ def _extract_domain(url: str) -> str:
         return ""
 
 
-def _model_to_response(bookmark: Bookmark) -> BookmarkOut:
+def _to_response(bookmark: Bookmark) -> BookmarkOut:
     """Convert a Bookmark model to API response schema."""
     return BookmarkOut(
         id=bookmark.id,  # type: ignore
@@ -35,11 +35,7 @@ def _model_to_response(bookmark: Bookmark) -> BookmarkOut:
     )
 
 
-# ---------------------------------------------------------------------------
-# CRUD Operations
-# ---------------------------------------------------------------------------
-
-async def create_bookmark(
+async def create(
     session: AsyncSession,
     *,
     url: str,
@@ -75,7 +71,7 @@ async def create_bookmark(
         existing.updated_at = datetime.now(timezone.utc)
         await session.commit()
         await session.refresh(existing)
-        return _model_to_response(existing)
+        return _to_response(existing)
     else:
         # Create new
         bookmark = Bookmark(
@@ -90,26 +86,26 @@ async def create_bookmark(
         session.add(bookmark)
         await session.commit()
         await session.refresh(bookmark)
-        return _model_to_response(bookmark)
+        return _to_response(bookmark)
 
 
-async def get_bookmark_by_id(session: AsyncSession, bookmark_id: int) -> Optional[BookmarkOut]:
+async def get_by_id(session: AsyncSession, bookmark_id: int) -> Optional[BookmarkOut]:
     """Get a bookmark by its ID."""
     stmt = select(Bookmark).where(Bookmark.id == bookmark_id)
     result = await session.execute(stmt)
     bookmark = result.scalar_one_or_none()
-    return _model_to_response(bookmark) if bookmark else None
+    return _to_response(bookmark) if bookmark else None
 
 
-async def get_bookmark_by_url(session: AsyncSession, url: str) -> Optional[BookmarkOut]:
+async def get_by_url(session: AsyncSession, url: str) -> Optional[BookmarkOut]:
     """Get a bookmark by its URL."""
     stmt = select(Bookmark).where(Bookmark.url == url)
     result = await session.execute(stmt)
     bookmark = result.scalar_one_or_none()
-    return _model_to_response(bookmark) if bookmark else None
+    return _to_response(bookmark) if bookmark else None
 
 
-async def list_bookmarks(
+async def list_all(
     session: AsyncSession,
     *,
     query: Optional[str] = None,
@@ -165,10 +161,10 @@ async def list_bookmarks(
     result = await session.execute(stmt)
     bookmarks = result.scalars().all()
 
-    return [_model_to_response(b) for b in bookmarks], total
+    return [_to_response(b) for b in bookmarks], total
 
 
-async def update_bookmark(
+async def update(
     session: AsyncSession,
     bookmark_id: int,
     *,
@@ -198,10 +194,10 @@ async def update_bookmark(
 
     await session.commit()
     await session.refresh(bookmark)
-    return _model_to_response(bookmark)
+    return _to_response(bookmark)
 
 
-async def delete_bookmark(session: AsyncSession, bookmark_id: int) -> bool:
+async def delete(session: AsyncSession, bookmark_id: int) -> bool:
     """Delete a bookmark by ID. Returns True if deleted, False if not found."""
     stmt = select(Bookmark).where(Bookmark.id == bookmark_id)
     result = await session.execute(stmt)

@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.database import init_db, close_db
 from app.routers.bookmarks import router as bookmarks_router
+from app.routers.api_keys import router as api_keys_router
 
 logger = logging.getLogger("arvai-kernel")
 
@@ -63,6 +64,7 @@ def create_app() -> FastAPI:
 
     # Routers
     app.include_router(bookmarks_router)
+    app.include_router(api_keys_router)
 
     # Health check
     @app.get("/health", tags=["system"])

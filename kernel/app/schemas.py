@@ -66,3 +66,44 @@ class MessageOut(BaseModel):
 
     message: str
     detail: str = ""
+
+
+# ---------------------------------------------------------------------------
+# API Key Schemas
+# ---------------------------------------------------------------------------
+
+class ApiKeyCreate(BaseModel):
+    """Schema for creating an API key."""
+
+    name: str = "Extension"
+
+
+class ApiKeyOut(BaseModel):
+    """Schema returned from API for an API key (without full key)."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    key_prefix: str
+    name: str
+    is_active: bool
+    created_at: datetime
+    last_used_at: Optional[datetime]
+
+
+class ApiKeyCreated(BaseModel):
+    """Schema returned when creating a new API key (includes full key once)."""
+
+    id: int
+    key: str  # Full key, only returned once
+    key_prefix: str
+    name: str
+    created_at: datetime
+
+
+class BookmarkCheckOut(BaseModel):
+    """Schema for bookmark check response."""
+
+    bookmarked: bool
+    bookmark_id: Optional[int] = None
+    created_at: Optional[datetime] = None

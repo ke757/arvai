@@ -44,3 +44,34 @@ class Bookmark(SQLModel, table=True):
     @tag_list.setter
     def tag_list(self, value: list[str]) -> None:
         self.tags = ",".join(value)
+
+
+class ApiKey(SQLModel, table=True):
+    """API key for browser extension authentication."""
+
+    __tablename__ = "api_keys"
+
+    id: Optional[int] = Field(default=None, primary_key=True, autoincrement=True)
+    key_hash: str = Field(
+        sa_column=sa.Column(sa.Text, nullable=False, unique=True, index=True),
+    )
+    key_prefix: str = Field(
+        default="",
+        sa_column=sa.Column(sa.Text, nullable=False, server_default=""),
+    )
+    name: str = Field(
+        default="Extension",
+        sa_column=sa.Column(sa.Text, nullable=False, server_default="Extension"),
+    )
+    is_active: bool = Field(
+        default=True,
+        sa_column=sa.Column(sa.Boolean, nullable=False, server_default="1"),
+    )
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=sa.Column(sa.DateTime, nullable=False),
+    )
+    last_used_at: Optional[datetime] = Field(
+        default=None,
+        sa_column=sa.Column(sa.DateTime, nullable=True),
+    )
