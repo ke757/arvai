@@ -6,6 +6,7 @@ import {
   Plus,
   Brain,
   Zap,
+  Chrome,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { BookmarkFilter, BookmarkStats } from '@/types'
@@ -17,6 +18,7 @@ type SidebarProps = {
   stats: BookmarkStats
   onSearchByTag: (tag: string) => void
   onAddClick: () => void
+  onExtensionClick: () => void
 }
 
 const NAV_ITEMS: { filter: BookmarkFilter; label: string; icon: typeof Bookmark }[] = [
@@ -32,6 +34,7 @@ export default function Sidebar({
   stats,
   onSearchByTag,
   onAddClick,
+  onExtensionClick,
 }: SidebarProps) {
   const getCount = (filter: BookmarkFilter) => {
     if (filter === 'all') return stats.total
@@ -117,6 +120,15 @@ export default function Sidebar({
         >
           <Plus className="w-4 h-4" />
           <span>添加书签</span>
+        </button>
+
+        {/* Extension Button */}
+        <button
+          onClick={onExtensionClick}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-ink-dim hover:bg-raised hover:text-ink transition-colors cursor-pointer"
+        >
+          <Chrome className="w-4 h-4" />
+          <span>浏览器扩展</span>
         </button>
 
         {/* API Status */}

@@ -5,6 +5,7 @@ import SearchBar from '@/components/SearchBar'
 import BookmarkCard from '@/components/BookmarkCard'
 import BookmarkDetail from '@/components/BookmarkDetail'
 import AddBookmarkModal from '@/components/AddBookmarkModal'
+import ExtensionConnect from '@/components/ExtensionConnect'
 import EmptyState from '@/components/EmptyState'
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
   } = useBookmarks()
 
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showExtensionModal, setShowExtensionModal] = useState(false)
 
   // Keyboard shortcut: Ctrl+K to focus search
   useEffect(() => {
@@ -33,7 +35,9 @@ function App() {
         document.getElementById('search-input')?.focus()
       }
       if (e.key === 'Escape') {
-        if (showAddModal) {
+        if (showExtensionModal) {
+          setShowExtensionModal(false)
+        } else if (showAddModal) {
           setShowAddModal(false)
         } else if (selectedBookmark) {
           setSelectedId(null)
@@ -42,7 +46,7 @@ function App() {
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [showAddModal, selectedBookmark, setSelectedId])
+  }, [showAddModal, showExtensionModal, selectedBookmark, setSelectedId])
 
   const handleSearchByTag = (tag: string) => {
     setSearchQuery(tag)
@@ -59,6 +63,7 @@ function App() {
         stats={stats}
         onSearchByTag={handleSearchByTag}
         onAddClick={() => setShowAddModal(true)}
+        onExtensionClick={() => setShowExtensionModal(true)}
       />
 
       {/* Main Content */}
@@ -122,6 +127,11 @@ function App() {
           }}
           onClose={() => setShowAddModal(false)}
         />
+      )}
+
+      {/* Extension Connect Modal */}
+      {showExtensionModal && (
+        <ExtensionConnect onClose={() => setShowExtensionModal(false)} />
       )}
     </div>
   )
