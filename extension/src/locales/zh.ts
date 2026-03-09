@@ -1,0 +1,31 @@
+const zh = {
+  'connection.title': '服务器连接',
+  'connection.edit': '编辑',
+  'connection.placeholder': '从桌面应用获取连接 URL',
+  'connection.verifying': '验证中...',
+  'connection.save': '保存',
+  'connection.cancel': '取消',
+  'connection.connected': '已连接',
+  'connection.urlInvalid': '无效的连接 URL',
+  'connection.serverUnreachable': '无法连接到服务器',
+  'connection.keyInvalid': 'API Key 无效',
+  'connection.networkError': '连接失败，请检查网络',
+  'bookmark.title': '页面收藏',
+  'bookmark.configureFirst': '请先配置服务器连接',
+  'bookmark.unsupported': '不支持当前页面',
+  'bookmark.failed': '收藏失败',
+  'bookmark.saving': '正在收藏...',
+  'bookmark.saved': '已收藏',
+  'bookmark.noTitle': '无标题',
+  'bookmark.savedAt': '收藏于 {date}',
+  'bookmark.removing': '移除中...',
+  'bookmark.remove': '移除收藏',
+  'bookmark.saveFailed': '保存失败',
+  'bookmark.dataError': '返回数据异常',
+  'bookmark.removeFailed': '删除失败',
+  'bookmark.statusError': '无法获取页面状态',
+  'bookmark.fetchError': '获取页面数据失败',
+} as const
+
+export default zh
+export type TranslationKey = keyof typeof zh

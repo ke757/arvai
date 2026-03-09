@@ -5,6 +5,11 @@ import { resolve } from 'node:path'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "./src"),
+    },
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,

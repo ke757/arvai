@@ -12,12 +12,12 @@ const STORAGE_KEY = 'arvai_connection';
 // Icon paths
 const ICONS = {
   default: {
-    16: 'icons/icon-16.png',
-    32: 'icons/icon-32.png',
+    16: 'icons/icon.svg',
+    32: 'icons/icon.svg',
   },
   bookmarked: {
-    16: 'icons/bookmarked-16.png',
-    32: 'icons/bookmarked-32.png',
+    16: 'icons/icon-bookmarked.svg',
+    32: 'icons/icon-bookmarked.svg',
   },
 };
 
