@@ -5,7 +5,7 @@ from sqlmodel import select
 
 from app.models import ApiKey
 from app.schemas import ApiKeyOut, ApiKeyCreated
-from app.auth import generate_api_key, hash_api_key, get_key_prefix
+from app.core.auth import generate_api_key, hash_api_key, get_key_prefix
 
 
 def _to_response(api_key: ApiKey) -> ApiKeyOut:

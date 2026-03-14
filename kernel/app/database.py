@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
-from app.config import get_settings
+from app.core.config import get_settings
 
 # ---------------------------------------------------------------------------
 # Engine (module-level singleton, created lazily)

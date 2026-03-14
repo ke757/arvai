@@ -8,10 +8,10 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import get_settings
+from app.core.config import get_settings
 from app.database import init_db, close_db
-from app.routers.bookmarks import router as bookmarks_router
-from app.routers.api_keys import router as api_keys_router
+from app.api.bookmarks import router as bookmarks_router
+from app.api.api_keys import router as api_keys_router
 
 logger = logging.getLogger("arvai-kernel")
 

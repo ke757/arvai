@@ -14,7 +14,7 @@ from app.schemas import (
     BookmarkCheckOut,
     MessageOut,
 )
-from app.auth import ApiKeyDep
+from app.core.auth import ApiKeyDep
 from app import crud
 
 router = APIRouter(prefix="/api/bookmarks", tags=["bookmarks"])

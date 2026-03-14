@@ -31,10 +31,22 @@ class AppConfig(BaseModel):
     version: str = "0.1.0"
 
 
+class LLMProviderConfig(BaseModel):
+    model: str = ""
+    api_key: str = ""
+    base_url: str = ""
+
+
+class LLMConfig(BaseModel):
+    active_provider: str = ""
+    providers: dict[str, LLMProviderConfig] = {}
+
+
 class Settings(BaseModel):
     server: ServerConfig = ServerConfig()
     database: DatabaseConfig = DatabaseConfig()
     app: AppConfig = AppConfig()
+    llm: LLMConfig = LLMConfig()
 
 
 # ---------------------------------------------------------------------------
