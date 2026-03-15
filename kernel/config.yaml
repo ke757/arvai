@@ -16,3 +16,21 @@ database:
 app:
   name: "Arvai Kernel"
   version: "0.1.0"
+
+llm:
+  active_provider: ""    # openai / deepseek / qianwen / ollama
+  providers:
+    openai:
+      model: "gpt-4o-mini"
+      api_key: ""
+    deepseek:
+      model: "deepseek-chat"
+      api_key: ""
+      base_url: "https://api.deepseek.com/v1"
+    qianwen:
+      model: "qwen-turbo"
+      api_key: ""
+      base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    ollama:
+      model: "llama3"
+      base_url: "http://localhost:11434"
