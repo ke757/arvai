@@ -49,6 +49,19 @@ function extractPageMetadata() {
 // TODO: 对于 SPA (单页应用)，可能需要等待特定网络请求完成后再提取
 /**
  * Extract page content
+ * 
+ * all: {
+ *  title: string;        // 文章标题
+ *  byline: string;       // 作者信息（如果页面中有）
+ *  dir: string;          // 文本方向 (ltr/rtl)
+ *  content: string;      // HTML 格式的正文内容
+ *  textContent: string;  // 纯文本格式的正文内容
+ *  length: number;       // 纯文本内容的长度（字符数）
+ *  excerpt: string;      // 文章摘要/摘录
+ *  siteName: string;     // 网站名称
+ *  lang: string;         // 语言代码
+ *  publishedTime: string; // 发布时间（如果页面中有）
+ * }
  */
 function extractPageContent() {
   // 1. 克隆整个 document，避免污染当前页面
@@ -71,7 +84,15 @@ function extractPageContent() {
     return null;
   }
 
-  return article;
+  return {
+    title: article.title,
+    html: article.content,
+    text: article.textContent,
+    length: article.length,
+    excerpt: article.excerpt,
+    language: article.lang,
+    direction: article.dir,
+  };
 }
 
 // Listen for messages from background script
