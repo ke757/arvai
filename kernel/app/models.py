@@ -16,15 +16,16 @@ class Bookmark(SQLModel, table=True):
     url: str = Field(
         sa_column=sa.Column(sa.Text, nullable=False, unique=True, index=True),
     )
-    title: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))
-    description: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))
-    favicon: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))
+    title: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))   # 标题
+    description: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))   # 描述
+    favicon: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))   # 图标
     domain: str = Field(
         default="",
         sa_column=sa.Column(sa.Text, nullable=False, server_default="", index=True),
-    )
-    tags: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))
-    source: str = Field(default="extension", sa_column=sa.Column(sa.Text, nullable=False, server_default="extension"))
+    )   # 域名
+    tags: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))   # 标签
+    source: str = Field(default="extension", sa_column=sa.Column(sa.Text, nullable=False, server_default="extension"))   # 来源
+    content: str = Field(default="", sa_column=sa.Column(sa.Text, nullable=False, server_default=""))   # 内容
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_column=sa.Column(sa.DateTime, nullable=False, index=True),

@@ -18,16 +18,16 @@ Usage:
     deleted = await api_keys.delete(session, 1)
 """
 
-from app.crud import bookmarks, api_keys
+from app.crud import bookmark, api_keys
 
 # Re-export for backward compatibility with existing routers
 # Bookmark operations
-create_bookmark = bookmarks.create
-get_bookmark_by_id = bookmarks.get_by_id
-get_bookmark_by_url = bookmarks.get_by_url
-list_bookmarks = bookmarks.list_all
-update_bookmark = bookmarks.update
-delete_bookmark = bookmarks.delete
+create_bookmark = bookmark.create
+get_bookmark_by_id = bookmark.get_by_id
+get_bookmark_by_url = bookmark.get_by_url
+list_bookmarks = bookmark.list_all
+update_bookmark = bookmark.update
+delete_bookmark = bookmark.delete
 
 # API Key operations
 create_api_key = api_keys.create

@@ -44,6 +44,7 @@ async def create(
     favicon: str = "",
     tags: Optional[list[str]] = None,
     source: str = "extension",
+    content: str = "",
 ) -> BookmarkOut:
     """
     Create a new bookmark or update if URL already exists (upsert).
@@ -66,6 +67,8 @@ async def create(
             existing.favicon = favicon
         if tags_str:
             existing.tags = tags_str
+        if content:
+            existing.content = content
         existing.domain = domain
         existing.source = source
         existing.updated_at = datetime.now(timezone.utc)
@@ -82,6 +85,7 @@ async def create(
             domain=domain,
             tags=tags_str,
             source=source,
+            content=content,
         )
         session.add(bookmark)
         await session.commit()
@@ -103,6 +107,13 @@ async def get_by_url(session: AsyncSession, url: str) -> Optional[BookmarkOut]:
     result = await session.execute(stmt)
     bookmark = result.scalar_one_or_none()
     return _to_response(bookmark) if bookmark else None
+
+
+async def get_by_url_raw(session: AsyncSession, url: str) -> Optional[Bookmark]:
+    """Get a bookmark by its URL, returning the raw model instance."""
+    stmt = select(Bookmark).where(Bookmark.url == url)
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
 
 
 async def list_all(

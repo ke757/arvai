@@ -18,10 +18,15 @@ class BookmarkCreate(BaseModel):
 
     url: HttpUrl
     title: str = ""
-    description: str = ""
-    favicon: str = ""
-    tags: list[str] = Field(default_factory=list)
-    source: str = "extension"
+    favicon: str = ""       # 图标
+    excerpt: str = ""       # 摘要
+    html: str = ""          # 内容
+    text: str = ""          # 文本
+    length: int = 0         # 文本长度
+    source: str = "tab"     # 来源（标签页、论文、其他）
+    tags: list[str] = Field(default_factory=list)   # 标签
+    language: str = ""      # 语言
+    direction: str = ""     # 方向（ltr/rtl）
 
 
 class BookmarkUpdate(BaseModel):

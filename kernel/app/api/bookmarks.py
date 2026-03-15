@@ -16,10 +16,12 @@ from app.schemas import (
 )
 from app.core.auth import ApiKeyDep
 from app import crud
+from app import services
+
 
 router = APIRouter(prefix="/api/bookmarks", tags=["bookmarks"])
 
-# Type alias for session dependency
+# Type alias for db session dependency
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
@@ -27,12 +29,8 @@ SessionDep = Annotated[AsyncSession, Depends(get_session)]
 # GET /api/bookmarks/check — check if URL is bookmarked (requires auth)
 # ---------------------------------------------------------------------------
 
-@router.get("/check", response_model=BookmarkCheckOut)
-async def check_bookmark(
-    url: str,
-    session: SessionDep,
-    api_key: ApiKeyDep,
-):
+@router.get("/check", dependencies=[Depends(ApiKeyDep)], response_model=BookmarkCheckOut)
+async def check_bookmark(url: str, session: SessionDep):
     """Check if a URL is already bookmarked. Requires API key authentication."""
     bookmark = await crud.get_bookmark_by_url(session, url)
     if bookmark:
@@ -48,10 +46,15 @@ async def check_bookmark(
 # POST /api/bookmarks  — save a tab (browser extension entry point)
 # ---------------------------------------------------------------------------
 
-@router.post("", response_model=BookmarkOut, status_code=201)
-async def create_bookmark(payload: BookmarkCreate, session: SessionDep, api_key: ApiKeyDep):
+@router.post(
+    "", 
+    dependencies=[Depends(ApiKeyDep)], 
+    response_model=BookmarkOut, 
+    status_code=201
+)
+async def create_bookmark(payload: BookmarkCreate, session: SessionDep):
     """Save a bookmark. Duplicate URLs will update the existing record. Requires API key."""
-    result = await crud.create_bookmark(
+    result = await services.bookmark.create_bookmark(
         session,
         url=str(payload.url),
         title=payload.title,
@@ -59,6 +62,9 @@ async def create_bookmark(payload: BookmarkCreate, session: SessionDep, api_key:
         favicon=payload.favicon,
         tags=payload.tags,
         source=payload.source,
+        excerpt=payload.excerpt,
+        text=payload.text,
+        html=payload.html,
     )
     return result
 
@@ -67,10 +73,9 @@ async def create_bookmark(payload: BookmarkCreate, session: SessionDep, api_key:
 # GET /api/bookmarks  — list / search bookmarks
 # ---------------------------------------------------------------------------
 
-@router.get("", response_model=BookmarkListOut)
+@router.get("", dependencies=[Depends(ApiKeyDep)], response_model=BookmarkListOut)
 async def list_bookmarks(
     session: SessionDep,
-    api_key: ApiKeyDep,
     q: Optional[str] = Query(None, description="关键字搜索"),
     tag: Optional[str] = Query(None, description="按标签筛选"),
     limit: int = Query(50, ge=1, le=200),
@@ -87,8 +92,8 @@ async def list_bookmarks(
 # GET /api/bookmarks/{id}
 # ---------------------------------------------------------------------------
 
-@router.get("/{bookmark_id}", response_model=BookmarkOut)
-async def get_bookmark(bookmark_id: int, session: SessionDep, api_key: ApiKeyDep):
+@router.get("/{bookmark_id}", dependencies=[Depends(ApiKeyDep)], response_model=BookmarkOut)
+async def get_bookmark(bookmark_id: int, session: SessionDep):
     """Get a bookmark by ID. Requires API key."""
     result = await crud.get_bookmark_by_id(session, bookmark_id)
     if result is None:
@@ -100,8 +105,8 @@ async def get_bookmark(bookmark_id: int, session: SessionDep, api_key: ApiKeyDep
 # PATCH /api/bookmarks/{id}
 # ---------------------------------------------------------------------------
 
-@router.patch("/{bookmark_id}", response_model=BookmarkOut)
-async def update_bookmark(bookmark_id: int, payload: BookmarkUpdate, session: SessionDep, api_key: ApiKeyDep):
+@router.patch("/{bookmark_id}", dependencies=[Depends(ApiKeyDep)], response_model=BookmarkOut)
+async def update_bookmark(bookmark_id: int, payload: BookmarkUpdate, session: SessionDep):
     """Update a bookmark by ID. Requires API key."""
     existing = await crud.get_bookmark_by_id(session, bookmark_id)
     if existing is None:
@@ -122,8 +127,8 @@ async def update_bookmark(bookmark_id: int, payload: BookmarkUpdate, session: Se
 # DELETE /api/bookmarks/{id}
 # ---------------------------------------------------------------------------
 
-@router.delete("/{bookmark_id}", response_model=MessageOut)
-async def delete_bookmark(bookmark_id: int, session: SessionDep, api_key: ApiKeyDep):
+@router.delete("/{bookmark_id}", dependencies=[Depends(ApiKeyDep)], response_model=MessageOut)
+async def delete_bookmark(bookmark_id: int, session: SessionDep):
     """Delete a bookmark by ID. Requires API key."""
     deleted = await crud.delete_bookmark(session, bookmark_id)
     if not deleted:
