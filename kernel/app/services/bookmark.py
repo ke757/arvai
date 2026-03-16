@@ -85,7 +85,7 @@ Summary:"""
         summary = response.content.strip() if response.content else ""
         
         # Validate summary length
-        if len(summary) < 10 or len(summary) > 500:
+        if len(summary) < 5 or len(summary) > 500:
             return ""
         
         return summary
@@ -139,7 +139,7 @@ async def create_bookmark(
         favicon=favicon,
         tags=tags,
         source=source,
-        content=html,
+        content=text,
     )
     
     if existing:

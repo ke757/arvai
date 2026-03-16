@@ -18,7 +18,7 @@ Usage:
     deleted = await api_keys.delete(session, 1)
 """
 
-from app.crud import bookmark, api_keys
+from app.crud import bookmark, api_keys, content_chunk
 
 # Re-export for backward compatibility with existing routers
 # Bookmark operations

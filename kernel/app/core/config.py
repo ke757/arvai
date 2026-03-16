@@ -10,6 +10,8 @@ from functools import lru_cache
 import yaml
 from pydantic import BaseModel
 
+from app.core.vector_store_config import VectorStoreConfig
+
 
 # ---------------------------------------------------------------------------
 # Config schema (mirrors config.yaml)
@@ -47,6 +49,7 @@ class Settings(BaseModel):
     database: DatabaseConfig = DatabaseConfig()
     app: AppConfig = AppConfig()
     llm: LLMConfig = LLMConfig()
+    vector_store: VectorStoreConfig = VectorStoreConfig()
 
 
 # ---------------------------------------------------------------------------

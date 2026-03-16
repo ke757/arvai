@@ -3,7 +3,7 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 import sqlalchemy as sa
 
 
@@ -12,7 +12,7 @@ class Bookmark(SQLModel, table=True):
 
     __tablename__ = "bookmarks"
 
-    id: Optional[int] = Field(default=None, primary_key=True, autoincrement=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     url: str = Field(
         sa_column=sa.Column(sa.Text, nullable=False, unique=True, index=True),
     )
@@ -46,13 +46,53 @@ class Bookmark(SQLModel, table=True):
     def tag_list(self, value: list[str]) -> None:
         self.tags = ",".join(value)
 
+    # ---- Relationships ----
+    chunks: list["ContentChunk"] = Relationship(
+        back_populates="bookmark",
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"},
+    )
+
+
+class ContentChunk(SQLModel, table=True):
+    """A text chunk from a bookmark's content for vector search."""
+
+    __tablename__ = "content_chunks"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    chunk_id: str = Field(
+        sa_column=sa.Column(sa.String(36), nullable=False, unique=True, index=True),
+    )  # UUID for vector store reference
+    bookmark_id: int = Field(
+        sa_column=sa.Column(
+            sa.Integer,
+            sa.ForeignKey("bookmarks.id", ondelete="CASCADE"),
+            nullable=False,
+            index=True,
+        ),
+    )
+    content: str = Field(
+        default="",
+        sa_column=sa.Column(sa.Text, nullable=False),
+    )  # The actual chunk text
+    index: int = Field(
+        default=0,
+        sa_column=sa.Column(sa.Integer, nullable=False),
+    )  # Position in the original document
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=sa.Column(sa.DateTime, nullable=False),
+    )
+
+    # ---- Relationships ----
+    bookmark: Optional[Bookmark] = Relationship(back_populates="chunks")
+
 
 class ApiKey(SQLModel, table=True):
     """API key for browser extension authentication."""
 
     __tablename__ = "api_keys"
 
-    id: Optional[int] = Field(default=None, primary_key=True, autoincrement=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     key_hash: str = Field(
         sa_column=sa.Column(sa.Text, nullable=False, unique=True, index=True),
     )

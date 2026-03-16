@@ -12,6 +12,7 @@ from app.core.config import get_settings
 from app.database import init_db, close_db
 from app.api.bookmarks import router as bookmarks_router
 from app.api.api_keys import router as api_keys_router
+from app.vector_store import get_vector_store_service
 
 logger = logging.getLogger("arvai-kernel")
 
@@ -33,8 +34,14 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     await init_db()
     logger.info("Database ready: %s", settings.database.path)
 
+    # Initialize vector store service
+    vector_service = await get_vector_store_service()
+    logger.info("Vector store service ready")
+
     yield  # --- application running ---
 
+    # Cleanup vector store service
+    await vector_service.close()
     await close_db()
     logger.info("Shutdown complete.")
 

@@ -58,7 +58,6 @@ async def create_bookmark(payload: BookmarkCreate, session: SessionDep):
         session,
         url=str(payload.url),
         title=payload.title,
-        description=payload.description,
         favicon=payload.favicon,
         tags=payload.tags,
         source=payload.source,
